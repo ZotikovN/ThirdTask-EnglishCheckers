@@ -20,8 +20,12 @@ class Piece extends ImageView {
         col = _col;
     }
 
-    boolean hasSide(Side _side) { return side == _side; }
-    boolean isKing() { return king; }
+    boolean hasSide(Side _side) {
+        return side == _side;
+    }
+    boolean isKing() {
+        return king;
+    }
 
     public void tryToBecomeKing() {
         if(row == lastRow) {
