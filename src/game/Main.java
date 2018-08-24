@@ -20,7 +20,6 @@ public class Main extends Application {
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         root.setBackground(new Background(boardImg));
         root.getChildren().add(new Field());
-
         Scene scene = new Scene(root, boardSize, boardSize);
         scene.setOnKeyPressed((KeyEvent kek) -> {
             if(kek.getCode() == KeyCode.F5) {
@@ -28,7 +27,6 @@ public class Main extends Application {
                 root.getChildren().add(new Field());
             }
         });
-
         primaryStage.setTitle("English Checkers");
         primaryStage.setScene(scene);
         primaryStage.show();

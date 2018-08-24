@@ -14,12 +14,8 @@ class Field extends GridPane {
     private Selection selection = new Selection();
     private Piece[][] pieces = new Piece[8][8];
     private Side playerSide = Side.WHITE;
-
-
     private boolean mustJump = false;
     private boolean multipleJump = false;
-
-
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
     private Set<Piece> capturedPieces = new HashSet<>();
@@ -27,25 +23,16 @@ class Field extends GridPane {
     Field() {
         Image blackPieceImg = new Image("img/blackPiece.png");
         Image whitePieceImg = new Image("img/whitePiece.png");
-
-
-
         this.setPrefSize(fieldSize, fieldSize);
         this.setLayoutX(38.0);
         this.setLayoutY(38.0);
-
-
         selection.setFitHeight(fieldSize / 8.0);
         selection.setFitWidth(fieldSize / 8.0);
-
-
         int i, j;
         for(i = 0; i < 8; i++) {
             this.getColumnConstraints().add(new ColumnConstraints(fieldSize / 8.0));
             this.getRowConstraints().add(new RowConstraints(fieldSize / 8.0));
         }
-
-
         for(i = 0; i < pieces.length; i++) {
             j = (i % 2 == 0) ? 1 : 0;
             while(j < pieces.length) {
@@ -62,8 +49,6 @@ class Field extends GridPane {
                 j += 2;
             }
         }
-
-
         this.setOnMouseClicked((final MouseEvent click) -> {
             int row = (int) (click.getY() * 8 / fieldSize);
             int col = (int) (click.getX() * 8 / fieldSize);
@@ -88,7 +73,9 @@ class Field extends GridPane {
     }
 
 
-    private boolean squareContainsPiece(int row, int col) { return pieces[row][col] != null; }
+    private boolean squareContainsPiece(int row, int col) {
+        return pieces[row][col] != null;
+    }
 
 
     private void move(int row, int col) {
@@ -138,10 +125,8 @@ class Field extends GridPane {
         Piece piece = selection.target;
         int capturedX = piece.col + (col - piece.col) / 2;
         int capturedY = piece.row + (row - piece.row) / 2;
-
         if(squareContainsPiece(capturedY, capturedX)) {
             Piece captured = pieces[capturedY][capturedX];
-
             if (!captured.hasSide(playerSide) && capturedPieces.add(captured)) {
                 movePiece(piece, row, col);
                 piece.tryToBecomeKing();
@@ -177,17 +162,10 @@ class Field extends GridPane {
 
 
     private void switchPlayer() {
-
         playerSide = playerSide == Side.WHITE ? Side.BLACK : Side.WHITE;
-
-
         this.getChildren().remove(selection);
         selection.target = null;
-
-
         capturedPieces.clear();
-
-
         Set<Piece> playerPieces = playerSide == Side.WHITE ? whitePieces : blackPieces;
         mustJump = false;
         for(Piece piece : playerPieces) {
