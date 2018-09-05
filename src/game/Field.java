@@ -38,6 +38,7 @@ class Field extends GridPane {
             this.getColumnConstraints().add(new ColumnConstraints(fieldSize / 8.0));
             this.getRowConstraints().add(new RowConstraints(fieldSize / 8.0));
         }
+        // заполнение поля шашками
         for(i = 0; i < pieces.length; i++) {
             j = (i % 2 == 0) ? 1 : 0;
             while(j < pieces.length) {
@@ -54,6 +55,7 @@ class Field extends GridPane {
                 j += 2;
             }
         }
+        // установка обработчика события клика мыши
         this.setOnMouseClicked((final MouseEvent click) -> {
             int row = (int) (click.getY() * 8 / fieldSize);
             int col = (int) (click.getX() * 8 / fieldSize);
@@ -64,6 +66,7 @@ class Field extends GridPane {
     }
 
 
+    // выделяет шашку, если она принадлежит игроку и это не череда прыжков
     private void selectPiece(Piece piece) {
         if (piece.hasSide(playerSide)) {
             selection.target = piece;
@@ -73,18 +76,21 @@ class Field extends GridPane {
     }
 
 
+    // проверяет, существует ли клетка поля с заданными координатами
     private boolean squareExists(int row, int col) {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
 
+    // проверяет, содержит ли клетка шашку
     private boolean squareContainsPiece(int row, int col) {
         return pieces[row][col] != null;
     }
 
 
+    // ход
     private void move(int row, int col) {
-        if (row % 2 != col % 2 && selection.isSet()) {
+        if (row % 2 != col % 2 && selection.isSet()) { // если это игровая клетка и выделена шашка
             int diffR = Math.abs(row - selection.target.row);
             int diffC = Math.abs(col - selection.target.col);
             if (diffR == 1 && diffC == 1) simpleMove(row, col);
@@ -93,6 +99,7 @@ class Field extends GridPane {
     }
 
 
+    // простой ход (перемещение на одну клетку)
     private void simpleMove(int row, int col) {
         if (!mustJump) {
             Piece piece = selection.target;
@@ -106,6 +113,7 @@ class Field extends GridPane {
     }
 
 
+    // перемещение шашки
     private void movePiece(Piece piece, int row, int col) {
         pieces[piece.row][piece.col] = null;
         pieces[row][col] = piece;
@@ -116,6 +124,7 @@ class Field extends GridPane {
     }
 
 
+    // удаление с доски захваченных шашек
     private void removeCapturedPieces() {
         for(Piece captured : capturedPieces) {
             pieces[captured.row][captured.col] = null;
@@ -126,15 +135,17 @@ class Field extends GridPane {
     }
 
 
+    // прыжок шашкой (через шашку соперника)
     private void jump(int row, int col) {
         Piece piece = selection.target;
-        int capturedX = piece.col + (col - piece.col) / 2;
-        int capturedY = piece.row + (row - piece.row) / 2;
+        int capturedX = piece.col + (col - piece.col) / 2; // координаты
+        int capturedY = piece.row + (row - piece.row) / 2; // захватываемой шашки
         if(squareContainsPiece(capturedY, capturedX)) {
-            Piece captured = pieces[capturedY][capturedX];
+            Piece captured = pieces[capturedY][capturedX]; // сама захватываемая шашка
+            // если захватыв. шашка приндл. сопернику и ещё не была захвачена (на этом ходу)
             if (!captured.hasSide(playerSide) && capturedPieces.add(captured)) {
-                movePiece(piece, row, col);
-                piece.tryToBecomeKing();
+                movePiece(piece, row, col); // перемещение шашки
+                piece.tryToBecomeKing(); // шашка становится дамкой, если дошла до конца поля
                 if (canJump(piece)) {
                     selectPiece(piece);
                     multipleJump = true;
@@ -166,17 +177,18 @@ class Field extends GridPane {
     }
 
 
+    // переключение игрока (передача хода другому игроку)
     private void switchPlayer() {
-        playerSide = playerSide == Side.WHITE ? Side.BLACK : Side.WHITE;
-        this.getChildren().remove(selection);
+        playerSide = playerSide == Side.WHITE ? Side.BLACK : Side.WHITE;// смена стороны
+        this.getChildren().remove(selection);// сброс выделения
         selection.target = null;
-        capturedPieces.clear();
+        capturedPieces.clear(); // очистка множества захваченных шашек
         Set<Piece> playerPieces = playerSide == Side.WHITE ? whitePieces : blackPieces;
         mustJump = false;
-        for(Piece piece : playerPieces) {
-            if(canJump(piece)) {
-                mustJump = true;
-                break;
+        for(Piece piece : playerPieces) { // для всех шашек игрока
+            if(canJump(piece)) { // если шашка может есть
+                mustJump = true; // флаг "обязан есть"
+                break; // завершение проверки
             }
         }
     }
