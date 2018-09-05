@@ -19,10 +19,11 @@ public class Main extends Application {
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         root.setBackground(new Background(boardImg));
-        root.getChildren().add(new Field());
+        root.getChildren().add(new Field());// создание игрового поля
         Scene scene = new Scene(root, boardSize, boardSize);
-        scene.setOnKeyPressed((KeyEvent kek) -> {
-            if(kek.getCode() == KeyCode.F5) {
+        // обработка нажатия клавиши F5 (начало новой игры)
+        scene.setOnKeyPressed((KeyEvent key) -> {
+            if(key.getCode() == KeyCode.F5) {
                 root.getChildren().clear();
                 root.getChildren().add(new Field());
             }

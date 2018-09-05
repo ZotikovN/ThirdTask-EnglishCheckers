@@ -10,24 +10,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 class Field extends GridPane {
-    private static final double fieldSize = 576.0;
-    private Selection selection = new Selection();
-    private Piece[][] pieces = new Piece[8][8];
-    private Side playerSide = Side.WHITE;
-    private boolean mustJump = false;
-    private boolean multipleJump = false;
-    private Set<Piece> whitePieces = new HashSet<>();
-    private Set<Piece> blackPieces = new HashSet<>();
-    private Set<Piece> capturedPieces = new HashSet<>();
+    private static final double fieldSize = 576.0; // размер поля
+    private Selection selection = new Selection(); // представление выделения шашки
+    private Piece[][] pieces = new Piece[8][8]; // шашки на поле
+    private Side playerSide = Side.WHITE; // сторона игрока (черные\белые)
+    // флаги
+    private boolean mustJump = false; // игрок обязан есть
+    private boolean multipleJump = false; // не завершена череда прыжков
+    // множества шашек
+    private Set<Piece> whitePieces = new HashSet<>();// множество белых шашек
+    private Set<Piece> blackPieces = new HashSet<>();// множество черных шашек
+    private Set<Piece> capturedPieces = new HashSet<>();// список захваченных шашек
 
     Field() {
         Image blackPieceImg = new Image("img/blackPiece.png");
         Image whitePieceImg = new Image("img/whitePiece.png");
+        // настройка размеров и расположения
         this.setPrefSize(fieldSize, fieldSize);
         this.setLayoutX(38.0);
         this.setLayoutY(38.0);
+        // размеры обводки
         selection.setFitHeight(fieldSize / 8.0);
         selection.setFitWidth(fieldSize / 8.0);
+        // добавление строк и столбцов
         int i, j;
         for(i = 0; i < 8; i++) {
             this.getColumnConstraints().add(new ColumnConstraints(fieldSize / 8.0));
@@ -170,7 +175,6 @@ class Field extends GridPane {
         mustJump = false;
         for(Piece piece : playerPieces) {
             if(canJump(piece)) {
-                System.out.println(piece.row + "\t" + piece.col);
                 mustJump = true;
                 break;
             }
