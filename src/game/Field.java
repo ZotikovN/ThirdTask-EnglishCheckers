@@ -10,35 +10,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 class Field extends GridPane {
-    private static final double fieldSize = 576.0; // размер поля
-    private Selection selection = new Selection(); // представление выделения шашки
-    private Piece[][] pieces = new Piece[8][8]; // шашки на поле
-    private Side playerSide = Side.WHITE; // сторона игрока (черные\белые)
+    private static final double fieldSize = 576.0;
+    private Selection selection = new Selection();
+    private Piece[][] pieces = new Piece[8][8];
+    private Side playerSide = Side.WHITE;
     // флаги
-    private boolean mustJump = false; // игрок обязан есть
-    private boolean multipleJump = false; // не завершена череда прыжков
+    private boolean mustJump = false;
+    private boolean multipleJump = false;
     // множества шашек
-    private Set<Piece> whitePieces = new HashSet<>();// множество белых шашек
-    private Set<Piece> blackPieces = new HashSet<>();// множество черных шашек
-    private Set<Piece> capturedPieces = new HashSet<>();// список захваченных шашек
+    private Set<Piece> whitePieces = new HashSet<>();
+    private Set<Piece> blackPieces = new HashSet<>();
+    private Set<Piece> capturedPieces = new HashSet<>();
 
     Field() {
         Image blackPieceImg = new Image("img/blackPiece.png");
         Image whitePieceImg = new Image("img/whitePiece.png");
-        // настройка размеров и расположения
         this.setPrefSize(fieldSize, fieldSize);
         this.setLayoutX(38.0);
         this.setLayoutY(38.0);
-        // размеры обводки
         selection.setFitHeight(fieldSize / 8.0);
         selection.setFitWidth(fieldSize / 8.0);
-        // добавление строк и столбцов
         int i, j;
         for(i = 0; i < 8; i++) {
             this.getColumnConstraints().add(new ColumnConstraints(fieldSize / 8.0));
             this.getRowConstraints().add(new RowConstraints(fieldSize / 8.0));
         }
-        // заполнение поля шашками
         for(i = 0; i < pieces.length; i++) {
             j = (i % 2 == 0) ? 1 : 0;
             while(j < pieces.length) {
@@ -55,7 +51,6 @@ class Field extends GridPane {
                 j += 2;
             }
         }
-        // установка обработчика события клика мыши
         this.setOnMouseClicked((final MouseEvent click) -> {
             int row = (int) (click.getY() * 8 / fieldSize);
             int col = (int) (click.getX() * 8 / fieldSize);
